@@ -1,0 +1,23 @@
+{
+  "name": "eventos-e-ingressos",
+  "version": "1.0.0",
+  "description": "API REST desenvolvida para o gerenciamento de eventos e ingressos.\r Neste primeiro momento, o projeto possui funcionalidades básicas\r para consulta e cadastro de eventos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sandyllps/eventos-e-ingressos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sandyllps/eventos-e-ingressos/issues"
+  },
+  "homepage": "https://github.com/Sandyllps/eventos-e-ingressos#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
