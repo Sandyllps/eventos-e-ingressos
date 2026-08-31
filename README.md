@@ -25,9 +25,9 @@ Cadastra um novo evento.
 Criar um arquivo package.json que guardará informações do projeto e, depois, as dependências.
 1. npm init -y
 
-Instalar Express que será usado na construção da API
+Instalar dependências
 
-2. npm install express
+2. npm install
 
 
 
@@ -45,7 +45,20 @@ Instalar Express que será usado na construção da API
 11. Após confirmar a integração, a branch temporária é excluída.
 12. O card correspondente no Kanban é marcado como concluído.
 
+
+## Por que escolhemos este Workflow?
+
+Adotamos o modelo de **Feature Branch Workflow** (com o uso de ramificações temporárias) pelos seguintes motivos:
+
+* **Isolamento de Recursos:** Cada nova funcionalidade ou correção é desenvolvida em uma branch separada. Isso garante que o código em desenvolvimento não interfira diretamente na versão estável (`main`).
+* **Flexibilidade e Agilidade:** Trabalhar com branches temporárias permite que múltiplos integrantes desenvolvam tarefas simultâneas de forma flexível, sem bloquear o progresso dos outros.
+* **Garantia de Qualidade:** A obrigatoriedade de Pull Requests e revisões por outros membros da equipe assegura que nenhum código seja integrado sem validação prévia.
+* **Ambiente Limpo:** A exclusão da branch temporária após o merge mantém o repositório organizado e livre de códigos obsoletos.
+*
+
 ## Integrantes
 Ana Francisca
+
 Sandy Lopes
+,22,
 Roberta Késsia
