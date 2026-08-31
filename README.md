@@ -23,8 +23,7 @@ Cadastra um novo evento.
 
 ## Como executar o projeto
 Instalar dependências
-
-2. npm install
+npm install
 
 
 
