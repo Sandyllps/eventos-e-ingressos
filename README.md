@@ -60,5 +60,5 @@ Adotamos o modelo de **Feature Branch Workflow** (com o uso de ramificações te
 Ana Francisca
 
 Sandy Lopes
-,22,
+
 Roberta Késsia
