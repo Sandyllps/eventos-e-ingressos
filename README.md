@@ -22,9 +22,6 @@ Cadastra um novo evento.
 
 
 ## Como executar o projeto
-Criar um arquivo package.json que guardará informações do projeto e, depois, as dependências.
-1. npm init -y
-
 Instalar dependências
 
 2. npm install
