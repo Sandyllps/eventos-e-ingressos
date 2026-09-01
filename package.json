@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API REST desenvolvida para o gerenciamento de eventos e ingressos.\r Neste primeiro momento, o projeto possui funcionalidades básicas\r para consulta e cadastro de eventos.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
