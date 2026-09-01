@@ -7,4 +7,11 @@ const geteventos = (req, res) => {
     res.json([]);
 };
 
-export { geteventos };
+
+const postEvento = (req, res) => {
+    const evento = req.body;
+
+    res.status(201).json(evento);
+};
+
+export { geteventos, postEvento };
