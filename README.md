@@ -14,10 +14,10 @@ para consulta e cadastro de eventos.
 - Cadastrar eventos
 
 ## Rotas da API
-### GET /api/eventos
+### GET /eventos
 Retorna a lista de eventos cadastrados.
 
-### POST /api/eventos
+### POST /eventos
 Cadastra um novo evento.
 
 
