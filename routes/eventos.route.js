@@ -1,6 +1,5 @@
 import express from "express";
-import { geteventos } from "../controllers/eventos.controller.js";
-import { postEvento } from "../controllers/eventos.controller.js";
+import { geteventos, postEvento } from "../controllers/eventos.controller.js";
 
 //Criando um objeto de rotas gerenciado pelo express
 const eventosRouter = express.Router();
