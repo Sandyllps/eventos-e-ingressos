@@ -8,6 +8,9 @@ para consulta e cadastro de eventos.
 ## Tecnologias utilizadas
 - Node.js
 - JavaScript
+- Express
+- Vitest + Supertest (testes e cobertura)
+- GitHub Actions (integração contínua)
 
 ## Funcionalidades
 - Listar eventos
@@ -22,10 +25,25 @@ Cadastra um novo evento.
 
 
 ## Como executar o projeto
-Instalar dependências
-
+- Instalar dependências:
 npm install
 
+- Executar os testes: 
+nmp test
+
+- Executar os testes com relatório de cobertura:
+npm run coverage
+
+
+## Integração Contínua (CI)
+
+O repositório possui dois workflows de GitHub Actions, localizados em .github/workflows/:
+
+- commit.yml — disparado a cada push em qualquer branch. Clona o repositório, instala o Node.js e as dependências, e roda os testes com cobertura.
+
+- pull-request.yml — disparado quando uma Pull Request é aberta ou atualizada tendo a main como destino. Executa os mesmos passos: instalação e testes com cobertura.
+
+Em ambos os workflows, a cobertura mínima exigida é de 90% (linhas, funções, branches e statements), configurada em vitest.config.js. Se a cobertura ficar abaixo disso, o workflow falha.
 
 
 ## Workflow
