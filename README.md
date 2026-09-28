@@ -23,6 +23,10 @@ Retorna a lista de eventos cadastrados.
 ### POST /eventos
 Cadastra um novo evento.
 
+## EsLint
+É uma ferramenta que analisa o código
+@eslint/js   → regras recomendadas do JavaScript
+globals      → permite informar ao ESLint que estamos usando ambiente Node.js
 
 ## Como executar o projeto
 - Instalar dependências:
@@ -34,6 +38,11 @@ nmp test
 - Executar os testes com relatório de cobertura:
 npm run coverage
 
+- Instalar o ESLint
+npm install --save-dev eslint @eslint/js globals
+
+- Executar o ESLint
+npm run lint
 
 ## Integração Contínua (CI)
 
@@ -44,6 +53,9 @@ O repositório possui dois workflows de GitHub Actions, localizados em .github/w
 - pull-request.yml — disparado quando uma Pull Request é aberta ou atualizada tendo a main como destino. Executa os mesmos passos: instalação e testes com cobertura.
 
 Em ambos os workflows, a cobertura mínima exigida é de 90% (linhas, funções, branches e statements), configurada em vitest.config.js. Se a cobertura ficar abaixo disso, o workflow falha.
+
+## Descrição do ESLint
+O ESLint é uma ferramenta utilizada para analisar o código e identificar erros, padrões inconsistentes e problemas de qualidade. Ele ajuda a manter o código mais organizado, padronizado e fácil de manter.
 
 
 ## Workflow

@@ -16,11 +16,9 @@ app.use("/eventos", eventosRouter);
 const server = app.listen(port, function(){
     console.log("Servidor rodando com sucesso!");
     console.log(`API HTTP rodando em http://localhost:${port}`);
-})
+});
 
 //Escutando eventos de erro na instância do servidor
-server.on('error',
-    //Essa função será executada quando acotecer um erro:
-    (erro) =>{
-    console.error("Erro: "+ erro)
-})
+server.on("error", (erro) => { //Essa função será executada quando acotecer um erro:
+    console.error("Erro: " + erro);
+});
