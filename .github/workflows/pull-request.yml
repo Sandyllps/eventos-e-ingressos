@@ -24,5 +24,23 @@ jobs:
       - name: Rodar testes com cobertura
         run: npm run coverage
 
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Rodar testes com cobertura
+        run: npm run coverage
+
       - name: Rodar lint
         run: npm run lint

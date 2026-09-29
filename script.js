@@ -70,25 +70,25 @@ const cadastrarEvento = async (evento) => {
     });
 
     //Verifica se o cadastro foi realizado
-if (resposta.status === 201) {
+    if (resposta.status === 201) {
 
-    alert("Evento cadastrado com sucesso!");
+        alert("Evento cadastrado com sucesso!");
 
-    // Mantém a lista de eventos escondida após o cadastro
-    const listaEventos = document.getElementById("listaEventos");
-    listaEventos.hidden = true;
+        // Mantém a lista de eventos escondida após o cadastro
+        const listaEventos = document.getElementById("listaEventos");
+        listaEventos.hidden = true;
 
-    // Mantém o botão indicando que a lista está fechada
-    botaoVerEventos.textContent = "Ver eventos cadastrados";
+        // Mantém o botão indicando que a lista está fechada
+        botaoVerEventos.textContent = "Ver eventos cadastrados";
 
 
-    return;
-}
+        return;
+    }
 
-// Mostra no console o status retornado pela API.
-console.log("Status retornado pelo POST:", resposta.status);
+    // Mostra no console o status retornado pela API.
+    console.log("Status retornado pelo POST:", resposta.status);
 
-alert("Não foi possível cadastrar o evento.");
+    alert("Não foi possível cadastrar o evento.");
 };
 
 
