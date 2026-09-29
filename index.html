@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Eventos e Ingressos</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Eventos e Ingressos</h1>
+        <p>Gerenciamento de eventos</p>
+    </header>
+
+    <main>
+
+        <section class="cadastro">
+            <h2>Cadastrar evento</h2>
+
+            <form id="formEvento">
+
+                <label for="nome">Nome do evento:</label>
+                <input type="text" id="nome" name="nome" required>
+
+                <label for="local">Local:</label>
+                <input type="text" id="local" name="local" required>
+
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <br>
+                <button type="submit">Cadastrar evento</button>
+
+            </form>
+        </section>
+
+        <section class="eventos">
+            <h2>Eventos cadastrados</h2>
+
+            <!--Botão utilizado para visualizar os eventos cadastrados--> 
+            <button type="button" id="botaoVerEventos">Ver eventos cadastrados</button>
+
+            <!--A lista começa escondida e será exibida quando o botão for clicado-->
+            <div id="listaEventos" hidden></div>
+            
+        </section>
+
+    </main>
+
+<script src="script.js"></script>    
+
+</body>
+
+</html>

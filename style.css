@@ -1,0 +1,95 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+
+header {
+    text-align: center;
+    padding: 30px;
+    background-color: palevioletred;
+    color: white;
+    border-radius: 10px;
+}
+
+header h1 {
+    margin: 0 0 10px;
+}
+
+header p {
+    margin: 0;
+}
+
+main {
+    width: 90%;
+    max-width: 800px;
+    margin: 30px auto;
+}
+
+section {
+    background-color: rgb(249, 191, 210);
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+}
+
+h2 {
+    margin-top: 0;
+    color: white;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: white;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid palevioletred;
+    background-color:  rgb(251, 243, 224);
+}
+
+button {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 20px;
+    color: rgb(251, 243, 224);
+    font-weight: bold;
+    background-color: palevioletred;
+    border: 3px solid rgb(251, 243, 224);
+
+}
+
+#listaEventos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/*Esconde a lista quando o atributo hidden estiver ativo*/
+#listaEventos[hidden] {
+    display: none;
+}
+
+.evento {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.evento h3 {
+    margin-top: 0;
+}
+
+.botao-excluir {
+    margin-top: 10px;
+}
