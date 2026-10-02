@@ -11,7 +11,7 @@ API REST desenvolvida para o gerenciamento de eventos e ingressos.
 * Express
 * Vitest + Supertest
 * ESLint
-* GitHub Actions
+* GitHub Actions 
 
 ## Funcionalidades
 
