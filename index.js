@@ -7,6 +7,7 @@ import { eventosRouter } from "./routes/eventos.route.js";
 
 
 const app = express(); //inicializando o framework express e armazenando todas as funcionalidades dele dentro de app
+app.disable("x-powered-by"); //Desabilita o cabeçalho que identifica o Express
 
 const port = 8080;
 

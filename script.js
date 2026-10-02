@@ -47,8 +47,8 @@ const carregarEventos = async () => {
 
     botoesExcluir.forEach((botao) => {
 
-        botao.addEventListener("click", () => {
-            excluirEvento(botao.dataset.id);
+        botao.addEventListener("click", async () => {
+            await excluirEvento(botao.dataset.id);
         });
 
     });
@@ -113,7 +113,7 @@ const excluirEvento = async (id) => {
 
         alert("Evento não encontrado.");
 
-        carregarEventos();
+        await carregarEventos();
 
         return;
     }
@@ -124,7 +124,7 @@ const excluirEvento = async (id) => {
         alert("Evento excluído com sucesso!");
 
         //Atualiza a lista depois da exclusão
-        carregarEventos();
+        await carregarEventos();
 
         return;
     }
@@ -164,14 +164,14 @@ formulario.addEventListener("submit", async (event) => {
 //NÃO abram o index.html pelo Live Server
 //Captura o botão utilizado para visualizar os eventos
 const botaoVerEventos = document.getElementById("botaoVerEventos");
-botaoVerEventos.addEventListener("click", () => {
+botaoVerEventos.addEventListener("click", async () => {
 
     const listaEventos = document.getElementById("listaEventos");
     
     // Se a lista estiver escondida, consulta e exibe os eventos.
     if (listaEventos.hidden) {
         // Ao clicar no botão, realiza a consulta GET /eventos.
-        carregarEventos();
+        await carregarEventos();
         
         botaoVerEventos.textContent = "Fechar";
 
