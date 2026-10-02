@@ -2,7 +2,7 @@
 
 ## Sobre o projeto
 
-API REST desenvolvida para o gerenciamento de eventos e ingressos.
+API REST desenvolvida para o gerenciamento de eventos e ingressos. 
 
 ## Tecnologias utilizadas
 
