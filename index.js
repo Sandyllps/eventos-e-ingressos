@@ -28,7 +28,7 @@ const server = app.listen(port, function () {
 
 });
 
-//Escutando eventos de erro na instância do servidor
+//Escutando eventos de erro na instância do servidor     
 server.on("error",
 
     //Essa função será executada quando acontecer um erro:
