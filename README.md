@@ -11,7 +11,7 @@ API REST desenvolvida para o gerenciamento de eventos e ingressos.
 * Express
 * Vitest + Supertest
 * ESLint
-* GitHub Actions 
+* GitHub Actions
 
 ## Funcionalidades
 
@@ -57,6 +57,14 @@ A execução é feita com:
 npm run lint
 ```
 
+## DockerHub
+
+A imagem Docker da aplicação Eventos e Ingressos está disponível no DockerHub:
+
+[![Docker Pulls](https://img.shields.io/docker/pulls/sandyllps/eventos-e-ingressos)](https://hub.docker.com/r/sandyllps/eventos-e-ingressos)
+
+[Visualizar repositório no DockerHub](https://hub.docker.com/r/sandyllps/eventos-e-ingressos)
+
 ## Como executar o projeto
 
 Instalar as dependências:
@@ -97,12 +105,13 @@ http://localhost:8080
 
 ## Integração Contínua (CI)
 
-O repositório possui dois workflows de GitHub Actions, localizados em `.github/workflows/`:
+O repositório possui três workflows de GitHub Actions, localizados em `.github/workflows/`:
 
 * `commit.yml` — executado a cada push em qualquer branch.
 * `pull-request.yml` — executado quando uma Pull Request tem a `main` como destino.
+* `sonarqube.yml` — executado em pushes na `main` e em Pull Requests direcionadas à `main`, realizando a análise com SonarQube.
 
-Os workflows realizam testes, verificação de cobertura e análise com ESLint.
+Os workflows realizam testes, verificação de cobertura, análise com ESLint e análise de qualidade com SonarQube, conforme suas configurações.
 
 ## Workflow
 
