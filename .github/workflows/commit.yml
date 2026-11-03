@@ -75,3 +75,89 @@ jobs:
 
           #Mantém o artefato disponível por apenas um dia
           retention-days: 1
+
+  # Job responsável por validar a imagem Docker construída
+  validate-image:
+    name: Validar imagem Docker
+    runs-on: ubuntu-latest
+
+    # Aguarda a construção da imagem pela Sandy
+    needs: build-image
+
+    steps:
+
+      # Baixa o artefato gerado pelo job build-image
+      - name: Baixar imagem construída
+        uses: actions/download-artifact@v8
+        with:
+          name: eventos-e-ingressos-image
+          path: imagem-docker
+
+      # Carrega a imagem Docker a partir do arquivo .tar
+      - name: Carregar imagem Docker
+        run: docker load --input imagem-docker/eventos-e-ingressos.tar
+
+      # Confirma que a imagem foi carregada corretamente
+      - name: Conferir imagem carregada
+        run: docker image inspect eventos-e-ingressos:${{ github.sha }}
+
+      # Inicia o container para realizar os testes
+      - name: Executar container
+        run: docker run -d --name eventos-validacao -p 8080:8080 eventos-e-ingressos:${{ github.sha }}
+
+      # Aguarda a API ficar disponível
+      - name: Aguardar API iniciar
+        shell: bash
+        run: |
+          for tentativa in {1..30}; do
+
+            status=$(curl --silent --output /dev/null --write-out "%{http_code}" http://127.0.0.1:8080/eventos || true)
+
+            if [ "$status" = "200" ]; then
+              echo "API disponível. HTTP 200."
+              exit 0
+            fi
+
+            echo "Aguardando API... tentativa $tentativa/30"
+            sleep 2
+
+          done
+
+          echo "A API não iniciou dentro do tempo esperado."
+          exit 1
+
+      # Verifica o status HTTP e o conteúdo retornado pela API
+      - name: Validar GET /eventos
+        shell: bash
+        run: |
+          status=$(curl --silent --show-error --output resposta.json --write-out "%{http_code}" http://127.0.0.1:8080/eventos)
+
+          echo "Status HTTP: $status"
+          echo "Resposta da API:"
+          cat resposta.json
+
+          if [ "$status" != "200" ]; then
+            echo "Erro: era esperado HTTP 200."
+            exit 1
+          fi
+
+          resposta=$(tr -d '[:space:]' < resposta.json)
+
+          if [ "$resposta" != "[]" ]; then
+            echo "Erro: era esperado um array vazio."
+            exit 1
+          fi
+
+          echo "Validação concluída com sucesso!"
+
+      # Exibe os logs caso alguma etapa tenha falhado
+      - name: Exibir logs em caso de erro
+        if: failure()
+        run: docker logs eventos-validacao || true
+
+      # Encerra e remove o container ao finalizar
+      - name: Encerrar container
+        if: always()
+        run: |
+          docker stop eventos-validacao || true
+          docker rm eventos-validacao || true
