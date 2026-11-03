@@ -1,0 +1,16 @@
+node_modules/
+
+coverage/
+
+.git/
+
+.github/
+
+tests/
+
+*.md
+
+.env
+.env.*
+
+npm-debug.log*
