@@ -44,3 +44,34 @@ jobs:
 
       - name: Rodar lint
         run: npm run lint
+
+  #Job responsável por construir a imagem Docker do projeto
+  build-image:
+    name: Construir imagem Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      #Constrói a imagem utilizando as instruções do Dockerfile
+      #O github.sha identifica o commit que iniciou o workflow
+      - name: Construir imagem Docker
+        run: docker build -t eventos-e-ingressos:${{ github.sha }} .
+
+      #Salva a imagem construída em um arquivo .tar. Esse arquivo permite compartilhar a imagem com outros jobs
+      - name: Salvar imagem em arquivo
+        run: docker save -o eventos-e-ingressos.tar eventos-e-ingressos:${{ github.sha }}
+
+      #Envia o arquivo .tar como artefato do GitHub Actions, assim, os próximos jobs poderão baixar a imagem construída
+      - name: Armazenar imagem para os próximos jobs
+        uses: actions/upload-artifact@v7
+        with:
+          #Nome que será utilizado pra encontrar o artefato
+          name: eventos-e-ingressos-image
+
+          #Caminho do arquivo que será armazenado
+          path: eventos-e-ingressos.tar
+
+          #Mantém o artefato disponível por apenas um dia
+          retention-days: 1
