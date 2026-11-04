@@ -161,3 +161,44 @@ jobs:
         run: |
           docker stop eventos-validacao || true
           docker rm eventos-validacao || true
+
+  # Job responsável por publicar a imagem Docker no DockerHub
+  publish-image:
+    name: Publicar imagem no DockerHub
+    runs-on: ubuntu-latest
+
+    # Só publica quando o código está na branch main
+    if: github.ref == 'refs/heads/main'
+
+    # Aguarda a construção e a validação da imagem
+    needs: [build-image, validate-image]
+
+    steps:
+      # Baixa a imagem construída anteriormente
+      - name: Baixar imagem construída
+        uses: actions/download-artifact@v8
+        with:
+          name: eventos-e-ingressos-image
+
+      # Carrega a imagem Docker
+      - name: Carregar imagem Docker
+        run: docker load -i eventos-e-ingressos.tar
+
+      # Realiza login no DockerHub
+      - name: Login no DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Cria as tags da imagem
+      - name: Configurar tags da imagem
+        run: |
+          docker tag eventos-e-ingressos:${{ github.sha }} ${{ vars.DOCKERHUB_USERNAME }}/eventos-e-ingressos:latest
+          docker tag eventos-e-ingressos:${{ github.sha }} ${{ vars.DOCKERHUB_USERNAME }}/eventos-e-ingressos:${{ github.sha }}
+
+      # Envia as imagens para o DockerHub
+      - name: Publicar imagem no DockerHub
+        run: |
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/eventos-e-ingressos:latest
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/eventos-e-ingressos:${{ github.sha }}
