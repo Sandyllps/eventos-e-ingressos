@@ -52,6 +52,11 @@ Vagrant.configure("2") do |config|
     # Compartilhamento da pasta do projeto
     vm2.vm.synced_folder ".", "/vagrant_data"
 
+     # Provisionamento da aplicacao
+    vm2.vm.provision "shell",
+      path: "scripts/provision-vm2.sh",
+      privileged: true
+
     # Configuracao do VirtualBox
     vm2.vm.provider "virtualbox" do |vb|
       vb.name = "eventos-e-ingressos-vm2"
