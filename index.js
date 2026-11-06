@@ -20,11 +20,11 @@ app.use("/eventos", eventosRouter);
 
 //Incializando o servidor
 //Aqui o servidor começa de fato a ouvir as chamadas que a página faz na porta definida
-const server = app.listen(port, function () {
+const server = app.listen(port, "0.0.0.0", function () {
 
     console.log("Servidor rodando com sucesso!");
 
-    console.log(`API HTTP rodando em http://localhost:${port}`);
+    console.log(`API HTTP rodando na porta ${port}`);
 
 });
 
