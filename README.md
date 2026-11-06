@@ -6,19 +6,19 @@ API REST desenvolvida para o gerenciamento de eventos e ingressos.
 
 ## Tecnologias utilizadas
 
-* Node.js
-* JavaScript
-* Express
-* Vitest + Supertest
-* ESLint
-* GitHub Actions
+- Node.js
+- JavaScript
+- Express
+- Vitest + Supertest
+- ESLint
+- GitHub Actions
 
 ## Funcionalidades
 
-* Listar eventos
-* Cadastrar eventos
-* Excluir eventos
-* Interface web simples para facilitar o uso e a demonstração da API
+- Listar eventos
+- Cadastrar eventos
+- Excluir eventos
+- Interface web simples para facilitar o uso e a demonstração da API
 
 ## Rotas da API
 
@@ -42,10 +42,10 @@ O projeto possui testes unitários e de integração.
 
 A cobertura é verificada pelo Vitest, com mínimo de 90% para:
 
-* Linhas
-* Funções
-* Branches
-* Statements
+- Linhas
+- Funções
+- Branches
+- Statements
 
 ## ESLint
 
@@ -103,13 +103,113 @@ Depois, acesse:
 http://localhost:8080
 ```
 
+## Infraestrutura com Vagrant
+
+O projeto utiliza o Vagrant e o VirtualBox para configurar duas máquinas virtuais Ubuntu 22.04, permitindo testar a comunicação entre uma máquina cliente e uma máquina servidora.
+
+### Pré-requisitos
+
+Antes de iniciar, é necessário instalar:
+
+- Oracle VirtualBox
+- HashiCorp Vagrant
+
+### Máquinas virtuais
+
+| Máquina | Função | Endereço IP | Memória |
+|---|---|---|---|
+| VM1 | Cliente | 192.168.56.10 | 1024 MB |
+| VM2 | Servidora | 192.168.56.11 | 1024 MB |
+
+### Iniciar as máquinas
+
+Na pasta do projeto, execute:
+
+```bash
+vagrant up --provider=virtualbox
+```
+
+Para verificar o estado das máquinas:
+
+```bash
+vagrant status
+```
+
+### Acessar as máquinas
+
+Para acessar a máquina cliente:
+
+```bash
+vagrant ssh vm1
+```
+
+Para acessar a máquina servidora:
+
+```bash
+vagrant ssh vm2
+```
+
+A VM2 executa a API automaticamente por meio de um serviço chamado `eventos-e-ingressos`.
+
+### Testar a comunicação entre as máquinas
+
+Após iniciar as máquinas, acesse a VM1:
+
+```bash
+vagrant ssh vm1
+```
+
+Dentro da VM1, execute:
+
+```bash
+curl -i http://192.168.56.11:8080/eventos
+```
+
+**Resultado esperado:** resposta HTTP `200 OK` e retorno `[]` quando não houver eventos cadastrados.
+
+### Parar e reiniciar as máquinas
+
+Para desligar as máquinas:
+
+```bash
+vagrant halt
+```
+
+Para iniciar novamente:
+
+```bash
+vagrant up --provider=virtualbox
+```
+
+Para executar novamente o provisionamento da VM2:
+
+```bash
+vagrant provision vm2
+```
+
+Para remover as máquinas virtuais:
+
+```bash
+vagrant destroy
+```
+
+### Validação final
+
+Em 06/11/2026, foi realizada a validação da infraestrutura com sucesso.
+
+- VM1 e VM2 em execução.
+- Comunicação entre as máquinas confirmada.
+- Teste da rota `GET /eventos` realizado a partir da VM1.
+- Resultado: HTTP 200 OK.
+- Corpo da resposta: `[]`.
+
 ## Integração Contínua (CI)
 
 O repositório possui três workflows de GitHub Actions, localizados em `.github/workflows/`:
 
-* `commit.yml` — executado a cada push em qualquer branch.
-* `pull-request.yml` — executado quando uma Pull Request tem a `main` como destino.
-* `sonarqube.yml` — executado em pushes na `main` e em Pull Requests direcionadas à `main`, realizando a análise com SonarQube.
+- `commit.yml` — executado a cada push em qualquer branch.
+- `pull-request.yml` — executado quando uma Pull Request tem a `main` como destino.
+- `sonarqube.yml` — executado em pushes na `main` e em Pull Requests direcionadas à `main`, realizando a análise com SonarQube.
 
 Os workflows realizam testes, verificação de cobertura, análise com ESLint e análise de qualidade com SonarQube, conforme suas configurações.
 
