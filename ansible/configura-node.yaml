@@ -1,0 +1,76 @@
+
+---
+#playbook responsavel por configurar a aplicacao na VM2
+
+- name: Instalar e configurar Eventos e Ingressos
+  hosts: servidores
+  gather_facts: true
+
+  vars:
+    repositorio: "https://github.com/Sandyllps/eventos-e-ingressos.git"
+    diretorio_app: "/home/vagrant/eventos-e-ingressos"
+
+  tasks:
+
+    - name: Atualizar lista de pacotes
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Instalar Git e dependencias do sistema
+      become: true
+      ansible.builtin.apt:
+        name:
+          - git
+          - curl
+          - ca-certificates
+          - gnupg
+        state: present
+
+    #baixa o instalador do repositorio NodeSource
+    - name: Baixar instalador do Node.js 24
+      become: true
+      ansible.builtin.get_url:
+        url: https://deb.nodesource.com/setup_24.x
+        dest: /tmp/nodesource_setup.sh
+        mode: '0755'
+
+    #configura o repositorio que fornece o Node.js 24
+    - name: Configurar repositorio NodeSource
+      become: true
+      ansible.builtin.command: bash /tmp/nodesource_setup.sh
+      args:
+        creates: /etc/apt/sources.list.d/nodesource.list
+
+    - name: Atualizar lista de pacotes do Node.js
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Instalar Node.js e npm
+      become: true
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+
+    - name: Clonar repositorio da aplicacao
+      ansible.builtin.git:
+        repo: "{{ repositorio }}"
+        dest: "{{ diretorio_app }}"
+        version: main
+        update: true
+
+    - name: Instalar dependencias da aplicacao
+      ansible.builtin.command: npm ci --omit=dev
+      args:
+        chdir: "{{ diretorio_app }}"
+
+    - name: Verificar versao do Node.js
+      ansible.builtin.command: node --version
+      register: versao_node
+      changed_when: false
+
+    - name: Exibir versao do Node.js
+      ansible.builtin.debug:
+        msg: "Node.js instalado: {{ versao_node.stdout }}"
