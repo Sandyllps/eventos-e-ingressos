@@ -151,6 +151,48 @@ vagrant ssh vm2
 
 A VM2 executa a API automaticamente por meio de um serviço chamado `eventos-e-ingressos`.
 
+### Configurar a VM2 com Ansible
+
+A configuração da máquina servidora é realizada pelo Ansible, executado na VM1.
+
+Acesse a VM1:
+
+```bash
+vagrant ssh vm1
+```
+
+Dentro da VM1, crie uma cópia dos arquivos do Ansible:
+
+```bash
+mkdir -p ~/ansible
+cp /vagrant_data/ansible/* ~/ansible/
+cd ~/ansible
+```
+
+Teste a comunicação com a VM2:
+
+```bash
+ansible servidores -m ping
+```
+
+Verifique a sintaxe do playbook:
+
+```bash
+ansible-playbook configura-node.yaml --syntax-check
+```
+
+Execute o playbook para instalar e configurar a aplicação:
+
+```bash
+ansible-playbook configura-node.yaml
+```
+
+Verifique o serviço da aplicação:
+
+```bash
+ansible servidores -m command -a "systemctl status eventos-e-ingressos --no-pager"
+```
+
 ### Testar a comunicação entre as máquinas
 
 Após iniciar as máquinas, acesse a VM1:
@@ -181,10 +223,18 @@ Para iniciar novamente:
 vagrant up --provider=virtualbox
 ```
 
-Para executar novamente o provisionamento da VM2:
+Para executar novamente a configuração da VM2 pelo Ansible, acesse a VM1:
 
 ```bash
-vagrant provision vm2
+vagrant ssh vm1
+```
+
+Dentro da VM1, atualize os arquivos do Ansible e execute o playbook:
+
+```bash
+cp /vagrant_data/ansible/* ~/ansible/
+cd ~/ansible
+ansible-playbook configura-node.yaml
 ```
 
 Para remover as máquinas virtuais:
