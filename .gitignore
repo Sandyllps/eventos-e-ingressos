@@ -1,3 +1,4 @@
 node_modules/
 coverage/
 .vagrant/
+ansible/vm1_ansible.pub
