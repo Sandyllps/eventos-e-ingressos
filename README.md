@@ -15,6 +15,7 @@ API REST desenvolvida para o gerenciamento de eventos e ingressos.
 - Vagrant
 - VirtualBox
 - Ansible
+- Datadog Agent
 
 **Testes e qualidade:**
 - Vitest + Supertest
@@ -116,7 +117,17 @@ http://localhost:8080
 
 ## Infraestrutura com Vagrant
 
-O projeto utiliza Vagrant e VirtualBox para criar duas máquinas virtuais Ubuntu 22.04. A VM1 funciona como nó de controle do Ansible, enquanto a VM2 funciona como servidora da aplicação.
+O projeto utiliza Vagrant e VirtualBox para criar duas máquinas virtuais Ubuntu 22.04. A VM1 funciona como nó de controle do Ansible, enquanto a VM2 funciona como servidora da aplicação e do monitoramento.
+
+### Função das ferramentas
+
+| Ferramenta | Função | Onde é executada |
+|---|---|---|
+| Vagrant | Cria e gerencia as máquinas virtuais. | No computador do usuário, pelo PowerShell. |
+| Ansible | Configura e instala a aplicação na VM2. | Na VM1, acessando a VM2 por SSH. |
+| Datadog Agent | Coleta e envia métricas da VM2 para a plataforma Datadog. | Na VM2, como serviço em execução. |
+
+A plataforma Datadog é acessada pelo navegador do computador do usuário.
 
 ### Pré-requisitos
 
@@ -133,7 +144,7 @@ Também é necessário baixar o repositório do projeto para o computador.
 | Máquina | Função | Endereço IP | Memória |
 |---|---|---|---|
 | VM1 | Nó de controle do Ansible | 192.168.56.10 | 1024 MB |
-| VM2 | Servidora da aplicação | 192.168.56.11 | 1024 MB |
+| VM2 | Servidora da aplicação e do monitoramento | 192.168.56.11 | 1024 MB |
 
 As duas máquinas utilizam o provedor VirtualBox.
 
@@ -149,13 +160,15 @@ vagrant up vm1 --provider=virtualbox
 
 A VM1 será criada e configurada. Durante essa etapa, o Ansible será instalado e uma chave SSH será gerada para permitir o acesso à VM2.
 
-Depois que a VM1 terminar de iniciar, execute:
+Antes de iniciar a VM2 pela primeira vez, configure a API Key do Datadog, conforme explicado na seção [Monitoramento com Datadog](#monitoramento-com-datadog).
+
+Em seguida, execute:
 
 ```bash
 vagrant up vm2 --provider=virtualbox
 ```
 
-A VM2 será criada e configurada para autorizar a chave pública gerada pela VM1.
+A VM2 será criada e configurada para autorizar a chave pública gerada pela VM1 e instalar automaticamente o Datadog Agent.
 
 A inicialização deve ocorrer nessa ordem porque a VM2 precisa encontrar a chave pública criada pela VM1.
 
@@ -273,6 +286,124 @@ curl -i http://192.168.56.11:8080/eventos
 
 O teste é realizado a partir da VM1, utilizando a ferramenta curl para acessar a rota da aplicação executada na VM2.
 
+## Monitoramento com Datadog
+
+O projeto utiliza o Datadog Agent para monitorar os recursos da VM2 e enviar métricas para a plataforma Datadog.
+
+### Configurar a API Key
+
+Antes de iniciar a VM2 pela primeira vez, é necessário criar uma API Key na plataforma Datadog.
+
+1. Acesse [Datadog](https://app.datadoghq.com/), entre na sua conta ou crie uma caso não possua.
+2. Abra **Organization Settings**.
+3. Acesse **API Keys**, na seção Access.
+4. Clique em **New Key**.
+5. No campo de nome, informe um nome para identificar a chave.
+
+   Como sugestão, utilize `eventos-e-ingressos-vm2`. Esse nome é apenas uma identificação dentro da plataforma e pode ser substituído por outro de sua preferência.
+
+6. Clique em **Create API Key**.
+7. Copie o valor da API Key criada.
+
+Neste projeto, foi utilizada a região US1, identificada pelo endereço `datadoghq.com`.
+
+**Atenção:** não confunda API Key com Key ID. O Agent precisa do valor da API Key para autenticar o envio das métricas. A chave não deve ser incluída no `Vagrantfile` nem em arquivos versionados no GitHub.
+
+Cada pessoa que executar o projeto poderá utilizar uma API Key da organização Datadog à qual tenha acesso.
+
+### Disponibilizar a API Key no PowerShell
+
+No PowerShell do Windows, dentro da pasta principal do projeto, execute:
+
+```powershell
+$env:DD_API_KEY = (Read-Host "Cole a API Key do Datadog").Trim()
+```
+
+Quando solicitado, cole o valor da API Key e pressione Enter. Caso o atalho Ctrl + V não funcione, utilize Shift + Insert.
+
+Para verificar se a chave foi carregada corretamente, sem exibir seu conteúdo, execute:
+
+```powershell
+if ($env:DD_API_KEY -match '^[a-fA-F0-9]{32}$') {
+    Write-Host "API Key carregada corretamente."
+}
+else {
+    Write-Host "ERRO: API Key ausente ou em formato invalido."
+}
+```
+
+A variável fica disponível na sessão atual do PowerShell. Se a janela for fechada, será necessário informar a chave novamente antes de executar um novo provisionamento que dependa dela.
+
+### Instalação automática do Datadog Agent
+
+Após carregar a API Key, execute:
+
+```powershell
+vagrant up vm1 --provider=virtualbox
+```
+
+Depois:
+
+```powershell
+vagrant up vm2 --provider=virtualbox
+```
+
+Durante a criação da VM2, o provisionamento do Vagrant:
+
+- Verifica se a API Key foi informada.
+- Instala o Datadog Agent 7.
+- Configura a API Key e a região US1.
+- Habilita e inicia o serviço `datadog-agent`.
+
+A instalação é realizada automaticamente pelo Vagrant. Não é necessário executar o instalador manualmente dentro da VM2.
+
+Caso a VM2 já exista e seja necessário executar novamente o provisionamento, informe a API Key no PowerShell e execute:
+
+```powershell
+vagrant provision vm2
+```
+
+### Verificar o funcionamento do Agent
+
+Para verificar se o serviço está ativo:
+
+```powershell
+vagrant ssh vm2 -c "sudo systemctl is-active datadog-agent"
+```
+
+O resultado esperado é:
+
+```text
+active
+```
+
+Para consultar o estado detalhado do Agent:
+
+```powershell
+vagrant ssh vm2 -c "sudo datadog-agent status"
+```
+
+O relatório apresenta informações sobre a versão do Agent, o nome da máquina, a validade da API Key e o funcionamento dos componentes de coleta e envio de métricas.
+
+### Visualizar o monitoramento no Datadog
+
+Acesse a plataforma [Datadog](https://app.datadoghq.com/).
+
+Entre em **Infrastructure → Hosts**, localize `eventos-vm2` e abra o painel de monitoramento.
+
+O painel apresenta gráficos de:
+
+- CPU usage (%).
+- Processes memory usage.
+- Load Averages 1-5-15.
+- Memory breakdown.
+- Available Swap.
+- Disk usage by device (%).
+- Disk latency (by device).
+- Network traffic (bytes per sec).
+
+Esses gráficos permitem acompanhar o uso do processador, da memória, do disco e da rede, além de outras informações da máquina.
+
 ### Parar e reiniciar as máquinas
 
 Para desligar as duas máquinas:
@@ -315,7 +446,7 @@ Para remover as máquinas virtuais:
 vagrant destroy
 ```
 
-**Atenção:** esse comando remove as máquinas virtuais do computador. Para utilizá-las novamente, será necessário criá-las outra vez com os comandos de inicialização apresentados anteriormente.
+**Atenção:** esse comando remove as máquinas virtuais do computador. Para utilizá-las novamente, será necessário criá-las outra vez com os comandos de inicialização apresentados anteriormente. Também será necessário informar novamente a API Key antes de criar a VM2.
 
 ### Validação da infraestrutura
 
@@ -332,9 +463,13 @@ Em 16/11/2026, foi realizada a validação da infraestrutura no ambiente local, 
 - Playbook executado com sucesso, sem tarefas com falha.
 - Node.js e dependências da aplicação instalados na VM2.
 - Serviço `eventos-e-ingressos` ativo e em execução.
-- Teste da rota `GET /eventos` realizado a partir da VM1 utilizando curl.
-- Resultado: HTTP `200 OK`.
-- Corpo da resposta: `[]`.
+- Teste da rota `GET /eventos` realizado a partir da VM1, com resposta HTTP `200 OK`.
+- Datadog Agent instalado automaticamente durante a criação de uma nova VM2.
+- Serviço `datadog-agent` ativo e habilitado.
+- API Key validada e conexão com a organização Datadog autorizada.
+- VM2 identificada como `eventos-vm2` na lista de hosts monitorados.
+- Envios de métricas confirmados pelo Forwarder do Agent.
+- Gráficos de CPU, memória, carga, swap, disco e rede apresentando dados no painel do host.
 
 ## Integração Contínua (CI)
 
