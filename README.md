@@ -154,7 +154,7 @@ A pasta do projeto é compartilhada com as duas máquinas no diretório `/vagran
 
 Na pasta principal do projeto, execute primeiro:
 
-```bash
+```powershell
 vagrant up vm1 --provider=virtualbox
 ```
 
@@ -164,7 +164,7 @@ Antes de iniciar a VM2 pela primeira vez, configure a API Key do Datadog, confor
 
 Em seguida, execute:
 
-```bash
+```powershell
 vagrant up vm2 --provider=virtualbox
 ```
 
@@ -174,7 +174,7 @@ A inicialização deve ocorrer nessa ordem porque a VM2 precisa encontrar a chav
 
 Para verificar o estado das máquinas:
 
-```bash
+```powershell
 vagrant status
 ```
 
@@ -182,13 +182,13 @@ vagrant status
 
 Para acessar a máquina controladora:
 
-```bash
+```powershell
 vagrant ssh vm1
 ```
 
 Para acessar a máquina servidora:
 
-```bash
+```powershell
 vagrant ssh vm2
 ```
 
@@ -336,13 +336,7 @@ A variável fica disponível na sessão atual do PowerShell. Se a janela for fec
 
 ### Instalação automática do Datadog Agent
 
-Após carregar a API Key, execute:
-
-```powershell
-vagrant up vm1 --provider=virtualbox
-```
-
-Depois:
+Depois de carregar a API Key, execute o comando de criação da VM2 apresentado na seção **Iniciar as máquinas**:
 
 ```powershell
 vagrant up vm2 --provider=virtualbox
@@ -418,6 +412,8 @@ Para iniciá-las novamente, na pasta principal do projeto, execute:
 vagrant up vm1 --provider=virtualbox
 vagrant up vm2 --provider=virtualbox
 ```
+
+Se as máquinas já tiverem sido criadas anteriormente, não será necessário refazer a instalação do Agent. O serviço será iniciado automaticamente quando a VM2 for ligada.
 
 Para executar novamente a configuração da VM2 pelo Ansible, acesse a VM1:
 
